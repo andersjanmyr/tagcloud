@@ -27,34 +27,38 @@
                 $(this).trigger('click.tagcloud', 'clicked');
             });
             return plugin.each(function() {
-                plugin._createCloud();
+                TagCloud(this, 'cloud', plugin.settings);
             });
         };
-
-        plugin._makeCanvas = function() {
-            var w = plugin.settings.width;
-            var h = plugin.settings.height;
-            return '<canvas id="cloud" width="' + w + '" height="' + h + '"></canvas>';
-        };
-
-        plugin._createCloud = function() {
-            $(this).append(plugin._makeCanvas());
-            var canvas = document.getElementById('cloud');
-            var ctx = canvas.getContext('2d');
-            var tags = plugin.settings.tags;
-            for (var tag in tags)
-                plugin._addWord(ctx, tag, tags[tag]);
-        };
-
-        plugin._addWord = function(ctx, word, size) {
-            ctx.fillText(word, 10, size);
-        };
-
 
 
 
         return init();
     };
-    
+
+    var TagCloud = function(el, id, settings) {
+        $(el).append(makeCanvas(id));
+        var canvas = document.getElementById(id);
+        var ctx = canvas.getContext('2d');
+        var tags = settings.tags;
+        console.log(tags);
+        for (var tag in tags)
+            addWord(tag, tags[tag]);
+
+        function makeCanvas(id) {
+            var w = settings.width;
+            var h = settings.height;
+            return '<canvas id="' + id + '" width="' + w + '" height="' + h + '"></canvas>';
+        }
+
+        function addWord(word, size) {
+            ctx.fillText(word, 10, size);
+        }
+
+        return {
+            addWord: addWord
+        };
+    };
+
 })(jQuery);
 
